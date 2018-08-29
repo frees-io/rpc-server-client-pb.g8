@@ -14,7 +14,7 @@ sbt runServer
 And the log will show:
 
 ```bash
-INFO  - seedServer - Starting server at localhost:19683
+INFO  - Starting server at localhost:19683
 ```
 
 then, run the client:
@@ -28,14 +28,14 @@ The client should log:
 ```bash
 INFO  - Created new RPC client for (localhost,19683)
 INFO  - Request: foo
-INFO  - Result: PeopleResponse(Person(foo,10))
+INFO  - Result: GetPersonResponse(Person(foo,10))
 INFO  - Removed 1 RPC clients from cache.
 ```
 
 And the server:
 
 ```bash
-INFO  - PeopleService - Request: PeopleRequest(foo)
+INFO  - PeopleService - Request: GetPersonRequest(foo)
 ```
 
 [comment]: # (Start Copyright)
