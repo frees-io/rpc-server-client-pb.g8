@@ -34,9 +34,9 @@ object PeopleServiceClient {
 
   def createClient[F[_]](hostname: String,
                          port: Int,
-                         sslEnabled: Boolean = true,
-                         tryToRemoveUnusedEvery: FiniteDuration,
-                         removeUnusedAfter: FiniteDuration)(
+                         sslEnabled: Boolean = false,
+                         tryToRemoveUnusedEvery: FiniteDuration = 30 minutes,
+                         removeUnusedAfter: FiniteDuration = 1 hour)(
       implicit F: Effect[F],
       L: Logger[F],
       TM: Timer[F],

@@ -1,31 +1,26 @@
 package $package$.client
 
 import cats.effect._
-import cats.syntax.functor._
-import fs2.{Stream, StreamApp}
-import io.chrisdavenport.log4cats.Logger
+import fs2.Stream
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import monix.execution.Scheduler
 
-import scala.language.postfixOps
-import scala.concurrent.duration._
+object ClientApp {
 
-class ClientProgram[F[_]: Effect] extends ClientBoot[F] {
+  implicit val S: Scheduler = monix.execution.Scheduler.Implicits.global
 
-  def peopleServiceClient(host: String, port: Int)(
-      implicit L: Logger[F]): Stream[F, PeopleServiceClient[F]] =
-    PeopleServiceClient.createClient(host,
-                                     port,
-                                     sslEnabled = false,
-                                     30 minutes,
-                                     1 hour)
+  implicit val TM = Timer.derive(Effect[IO], IO.timer(S))
 
-  override def serverStream(
-      implicit L: Logger[F]): Stream[F, StreamApp.ExitCode] = {
-    for {
-      peopleClient <- peopleServiceClient("localhost", 19683)
-      exitCode <- Stream.eval(
-        peopleClient.getPerson("foo").as(StreamApp.ExitCode.Success))
-    } yield exitCode
+  def main(args: Array[String]): Unit = {
+    (for {
+      logger <- Stream.eval(Slf4jLogger.fromName[IO]("Client"))
+      client <- {
+        implicit val l = logger
+        PeopleServiceClient.createClient[IO]("localhost", 19683)
+      }
+      getPersonResponse <- Stream.eval(client.getPerson("foo")).as(println)
+    } yield (getPersonResponse)).compile.toVector.unsafeRunSync()
+
   }
-}
 
-object ClientApp extends ClientProgram[IO]
+}
