@@ -8,8 +8,7 @@ import $package$.protocol.services._
 import io.grpc.{CallOptions, ManagedChannel}
 import monix.execution.Scheduler
 import io.chrisdavenport.log4cats.Logger
-
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration._
 
 trait PeopleServiceClient[F[_]] {
 
