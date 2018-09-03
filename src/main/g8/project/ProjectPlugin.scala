@@ -13,7 +13,7 @@ object ProjectPlugin extends AutoPlugin {
       val fs2            = "0.10.4"
       val log4cats       = "0.1.1"
       val logbackClassic = "1.2.3"
-      val freestyleRPC   = "0.14.1"
+      val freestyleRPC   = "$freesRPCVersion$"
     }
   }
 
