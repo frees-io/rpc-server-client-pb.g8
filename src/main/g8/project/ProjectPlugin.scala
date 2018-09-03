@@ -10,12 +10,10 @@ object ProjectPlugin extends AutoPlugin {
   object autoImport {
 
     lazy val V = new {
-      val fs2            = "0.10.1"
-      val log4cats       = "0.1.0"
+      val fs2            = "0.10.4"
+      val log4cats       = "0.1.1"
       val logbackClassic = "1.2.3"
-      val circe          = "0.10.0-M1"
-      val freestyleRPC   = "0.14.0"
-      val http4s         = "0.18.15"
+      val freestyleRPC   = "0.14.1"
     }
   }
 
@@ -65,6 +63,6 @@ object ProjectPlugin extends AutoPlugin {
       ),
       scalafmtCheck := true,
       scalafmtOnCompile := true,
-      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
     )
 }
