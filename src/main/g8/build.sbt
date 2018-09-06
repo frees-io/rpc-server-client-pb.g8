@@ -2,9 +2,9 @@ import ProjectPlugin._
 
 lazy val protocol = project.in(file("protocol")).settings(rpcProtocolSettings)
 
-lazy val client = project.in(file("client")).setting(clientRPCSettings).dependsOn(protocol)
+lazy val client = project.in(file("client")).settings(clientRPCSettings).dependsOn(protocol)
 
-lazy val server = project.in(file("server")).setting(serverSettings).dependsOn(protocol)
+lazy val server = project.in(file("server")).settings(serverSettings).dependsOn(protocol)
 
 lazy val allRootModules: Seq[ProjectReference] = Seq(protocol, client, server)
 
