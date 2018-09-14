@@ -1,0 +1,6 @@
+@namespace("$package$.protocol")
+protocol PeopleService {
+  import idl "People.avdl";
+
+  $package$.protocol.PeopleResponse getPerson($package$.protocol.PeopleRequest request);
+}

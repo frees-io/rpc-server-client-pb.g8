@@ -1,26 +1,28 @@
 package $package$.client
 
-import cats.effect._
-import fs2.Stream
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import cats.effect.{Effect, IO, Timer}
+import cats.instances.list._
+import cats.syntax.traverse._
+import $package$.commons._
+import $package$.commons.config.ServiceConfig
+import $package$.protocol.Person
+import fs2.{Stream, StreamApp}
+import io.chrisdavenport.log4cats.Logger
 import monix.execution.Scheduler
 
-object ClientApp {
+class ClientProgram[F[_]: Effect: Logger] extends AppBoot[F] {
 
   implicit val S: Scheduler = monix.execution.Scheduler.Implicits.global
 
-  implicit val TM = Timer.derive(Effect[IO], IO.timer(S))
+  implicit val TM: Timer[F] = Timer.derive[F](Effect[F], IO.timer(S))
 
-  def main(args: Array[String]): Unit = {
-    (for {
-      logger <- Stream.eval(Slf4jLogger.fromName[IO]("Client"))
-      client <- {
-        implicit val l = logger
-        PeopleServiceClient.createClient[IO]("localhost", 19683)
-      }
-      getPersonResponse <- Stream.eval(client.getPerson("foo")).as(println)
-    } yield (getPersonResponse)).compile.toVector.unsafeRunSync()
-
-  }
-
+  override def appStream(config: ServiceConfig): fs2.Stream[F, StreamApp.ExitCode] =
+    for {
+      peopleClient <- PeopleServiceClient.createClient(config.host.value, config.port.value)
+      exitCode <- Stream
+        .eval(List("foo", "bar", "baz").traverse[F, Person](peopleClient.getPerson))
+        .as(StreamApp.ExitCode.Success)
+    } yield exitCode
 }
+
+object ClientApp extends ClientProgram[IO]
