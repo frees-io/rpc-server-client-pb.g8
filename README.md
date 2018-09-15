@@ -32,7 +32,7 @@ name [Project Name]: My RPC project
 projectDescription [Project Description]: A new RPC project with Freestyle-RPC
 project [project-name]: my-rpc-project
 package [org.mycompany]: org.mycompany
-freestyleRPC [0.14.0]: 0.14.0
+freestyleRPC [0.14.1]: 0.14.1
 
 ...
 
